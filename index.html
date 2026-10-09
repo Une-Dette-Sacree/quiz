@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Quatorze situations de la vie de tous les jours. Toi, tu ferais quoi ? Un quiz proposé par les auteur·e·s de l'essai Une dette sacrée.">
+<meta property="og:title" content="Et toi, tu ferais quoi ?">
+<meta property="og:description" content="Quatorze situations de la vie de tous les jours. Découvre ce que tes choix produisent, pour toi et pour les autres.">
+<meta property="og:type" content="website">
+<title>Et toi, tu ferais quoi ?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Playfair+Display:wght@700&display=swap">
+<style>
+/* Layout : une colonne de lecture (max 640px), un écran à la fois : accueil, situation, bilan. */
+:root {
+  --bg: #F1ECE1;
+  --surface: #F8F4EC;
+  --ink: #2A1E1F;
+  --muted: #6B5E58;
+  --line: #D9CFBF;
+  --accent: #8C1D32;
+  --on-accent: #F6F0E6;
+  --accent-soft: #EADAD2;
+  --gold: #C89A26;
+  --gold-soft: #EFE0B8;
+  --display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1B1415; --surface: #251C1D; --ink: #F1ECE1; --muted: #B9ACA2; --line: #3E3133;
+    --accent: #D9798A; --on-accent: #1B1415; --accent-soft: #3A2226; --gold: #D9AE45; --gold-soft: #3B3120;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1B1415; --surface: #251C1D; --ink: #F1ECE1; --muted: #B9ACA2; --line: #3E3133;
+  --accent: #D9798A; --on-accent: #1B1415; --accent-soft: #3A2226; --gold: #D9AE45; --gold-soft: #3B3120;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--body); font-size: 17px; line-height: 1.55;
+  padding-inline: 16px; padding-block: 0 40px;
+}
+.wrap { max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+.proto {
+  margin: 0 auto; max-width: 640px; padding-block: 10px;
+  font-size: 12.5px; letter-spacing: .04em; color: var(--muted);
+  border-bottom: 1px dashed var(--line); text-align: center;
+}
+.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+h1, h2, h3 { font-family: var(--display); font-weight: 700; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.3rem, 7vw, 3.4rem); line-height: 1.05; }
+h2 { font-size: clamp(1.45rem, 4.6vw, 1.9rem); line-height: 1.2; }
+h3 { font-size: 1.2rem; line-height: 1.25; }
+p { margin: 0; }
+a { color: var(--accent); }
+.lede { font-size: 1.1rem; max-width: 60ch; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font-size: 13.5px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); background: var(--surface); }
+.btn {
+  appearance: none; border: 0; cursor: pointer; font: inherit; font-weight: 700;
+  background: var(--accent); color: var(--on-accent);
+  padding: 14px 26px; border-radius: 6px; align-self: flex-start; font-size: 1rem;
+}
+.btn:hover { filter: brightness(1.08); }
+.btn.ghost { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+/* Le modèle en bref */
+.who { border-top: 1px solid var(--line); padding-top: 22px; display: flex; flex-direction: column; gap: 12px; }
+.who p { color: var(--muted); }
+details.brief { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+details.brief > summary {
+  cursor: pointer; padding: 12px 16px; font-weight: 700; list-style: none;
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+}
+details.brief > summary::-webkit-details-marker { display: none; }
+details.brief > summary::after { content: "+"; font-size: 1.3rem; line-height: 1; color: var(--accent); }
+details.brief[open] > summary::after { content: "−"; }
+.points { list-style: none; margin: 0; padding: 0 16px 16px; display: flex; flex-direction: column; gap: 12px; }
+.points li { font-size: 15.5px; }
+.points b { display: block; color: var(--accent); }
+.model details.brief { background: transparent; border-color: color-mix(in srgb, var(--on-accent) 35%, transparent); }
+.model details.brief > summary { color: var(--on-accent); padding: 10px 14px; font-size: 15px; }
+.model details.brief > summary::after { color: var(--on-accent); }
+.model .points { padding: 0 14px 14px; }
+.model .points b { color: var(--on-accent); }
+
+/* Progression */
+.progress { padding-top: 28px; display: flex; flex-direction: column; gap: 10px; }
+.progress-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.count { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.segs { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; }
+.seg { height: 5px; border-radius: 2px; background: var(--line); }
+.seg.done { background: var(--accent); }
+.seg.now { background: var(--gold); }
+
+/* Situation */
+.options { display: flex; flex-direction: column; gap: 10px; }
+.opt {
+  appearance: none; font: inherit; text-align: left; cursor: pointer;
+  background: var(--surface); color: var(--ink);
+  border: 1.5px solid var(--line); border-radius: 8px; padding: 14px 16px;
+  transition: border-color .15s, background .15s, opacity .2s;
+}
+.opt:hover:not([disabled]) { border-color: var(--accent); }
+.opt[disabled] { cursor: default; }
+.opt.picked { border-color: var(--accent); background: var(--accent-soft); font-weight: 500; }
+.opt.faded { opacity: .45; }
+
+.reveal { display: flex; flex-direction: column; gap: 18px; animation: rise .35s ease both; }
+@keyframes rise { from { transform: translateY(8px); opacity: .01; } to { transform: none; opacity: 1; } }
+.label { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.reveal-text { display: flex; flex-direction: column; gap: 8px; }
+.stat { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border: 1px dashed var(--line); border-radius: 8px; }
+.stat-row { display: flex; align-items: center; gap: 12px; }
+.stat-track { flex: 1; height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.stat-fill { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 4px; transition: width .6s ease; }
+.stat-val { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--muted); min-width: 3.5ch; text-align: right; }
+.stat small { color: var(--muted); font-size: 13px; }
+.model { background: var(--accent); color: var(--on-accent); border-radius: 10px; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; }
+.model .label { color: var(--on-accent); opacity: .8; }
+.model a { color: var(--on-accent); font-weight: 700; }
+.fiche-link { font-size: 15px; }
+
+/* Bilan */
+#results { padding-top: 40px; }
+.score { display: flex; flex-direction: column; gap: 14px; }
+.score-big { font-family: var(--display); font-size: clamp(3rem, 12vw, 4.6rem); line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+.score-big small { font-size: .38em; color: var(--muted); font-family: var(--body); font-weight: 500; }
+.dots { display: flex; gap: 6px; flex-wrap: wrap; }
+.dot { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--accent); }
+.dot.c { background: var(--accent); }
+.legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13.5px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--accent); display: inline-block; }
+.legend i.c { background: var(--accent); }
+.recap { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.recap-item { padding-block: 18px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; }
+.recap-head { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.recap-theme { font-weight: 700; }
+.pill { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; }
+.pill.c { background: var(--accent); color: var(--on-accent); }
+.pill.i { background: var(--gold-soft); color: var(--ink); }
+.recap-choice { color: var(--muted); font-size: 15px; }
+.recap-model { font-size: 15.5px; }
+.verdict { display: flex; flex-direction: column; gap: 12px; max-width: 64ch; }
+.verdict h3 { font-family: var(--display); font-size: clamp(1.35rem, 4vw, 1.7rem); line-height: 1.2; margin: 0; color: var(--accent); }
+.verdict h4 { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 10px 0 0; }
+.verdict p { margin: 0; }
+.verdict .themes { font-size: 15px; color: var(--muted); }
+.fiches { padding-left: 1.1em; }
+.fiches li { margin: 2px 0; }
+.note { font-size: 14.5px; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; }
+.more { display: flex; flex-direction: column; gap: 10px; }
+.more ul { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: 6px; }
+.actions { display: flex; gap: 12px; flex-wrap: wrap; }
+footer { max-width: 640px; margin: 40px auto 0; padding-top: 16px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+footer b { font-family: var(--display); color: var(--accent); font-size: 14px; }
+@media (prefers-reduced-motion: reduce) { .reveal { animation: none; } .opt { transition: none; } }
+</style>
+</head>
+<body>
+
+
+<main class="wrap">
+  <section id="intro" class="wrap" style="padding-top:48px">
+    <div class="eyebrow">Salaire à Vie · Utopie réalisable</div>
+    <h1>Et toi, tu ferais quoi&nbsp;?</h1>
+    <p class="lede">Quatorze situations de la vie de tous les jours. Pour chacune, choisis la réponse la plus proche de ce que tu ferais ou penserais vraiment. Toutes les réponses se défendent. On te montre ensuite ce que ton choix produit, pour toi et pour les autres.</p>
+    <div class="meta">
+      <span class="chip" id="nb-chip">14 situations</span>
+      <span class="chip">environ 7 minutes</span>
+      <span class="chip">anonyme</span>
+    </div>
+    <button class="btn" id="start">Commencer</button>
+    <div class="who">
+      <h3>Qui te pose ces questions&nbsp;?</h3>
+      <p>Ce quiz est proposé par les auteur·e·s de l'essai <a href="une-dette-sacree.pdf" target="_blank" rel="noopener"><em>Une dette sacrée</em></a>. Nous défendons un modèle économique, le Salaire à Vie. Après chaque réponse, nous te montrons comment ce modèle traiterait la situation. À toi de juger.</p>
+      <div id="brief-intro"></div>
+    </div>
+  </section>
+
+  <section id="quiz" class="wrap" hidden>
+    <div class="progress">
+      <div class="progress-top">
+        <span class="eyebrow" id="theme"></span>
+        <span class="count" id="count"></span>
+      </div>
+      <div class="segs" id="segs"></div>
+    </div>
+    <h2 id="situation"></h2>
+    <div class="options" id="options"></div>
+    <div id="reveal" class="reveal" hidden>
+      <div class="reveal-text">
+        <div class="label">Ce que ton choix produit</div>
+        <p id="reveal-body"></p>
+      </div>
+      <div class="stat" id="stat" hidden>
+        <div class="stat-row"><span class="stat-track"><span class="stat-fill" id="stat-fill"></span></span><span class="stat-val" id="stat-val"></span></div>
+        <small id="stat-note"></small>
+      </div>
+      <div class="model">
+        <div class="label">Avec le Salaire à Vie</div>
+        <p id="model-body"></p>
+        <a class="fiche-link" id="model-link" href="#" target="_blank" rel="noopener"></a>
+        <div id="brief-quiz"></div>
+      </div>
+      <button class="btn" id="next">Situation suivante</button>
+    </div>
+  </section>
+
+  <section id="results" class="wrap" hidden>
+    <div class="eyebrow">Ton bilan</div>
+    <div class="score">
+      <div class="score-big"><span id="score"></span><small> / <span id="nb-total">14</span> choix communs</small></div>
+      <div class="dots" id="dots"></div>
+      <div class="legend"><span><i class="c"></i>choix commun</span><span><i></i>choix individuel</span></div>
+      <div class="verdict" id="verdict"></div>
+    </div>
+    <div class="note"><strong>Comment on compte.</strong> Dans chaque situation, un choix passe par une règle, une institution ou une action partagée&nbsp;: c'est le choix commun. Les autres reposent sur toi ou sur tes proches. L'entraide familiale compte comme un choix individuel. Elle est précieuse, mais elle dépend de la famille qu'on a.</div>
+    <div class="more">
+      <h2>Le Salaire à Vie, en bref</h2>
+      <div id="brief-results"></div>
+    </div>
+    <h2>Situation par situation</h2>
+    <div class="recap" id="recap"></div>
+    <div class="more">
+      <h2>Les 14 fiches</h2>
+      <p>Chaque fiche part d'une situation du quotidien, expose ce que propose le modèle et répond à une objection.</p>
+      <ul class="fiches">
+        <li><a href="hopital.pdf" target="_blank" rel="noopener">Fiche 1 · Et si votre hôpital n'avait plus besoin de faire du profit&nbsp;?</a></li>
+        <li><a href="urss.pdf" target="_blank" rel="noopener">Fiche 2 · Comment on évite que ça devienne l'URSS&nbsp;?</a></li>
+        <li><a href="donnees.pdf" target="_blank" rel="noopener">Fiche 3 · Est-ce que l'État va tout savoir sur moi&nbsp;?</a></li>
+        <li><a href="travail.pdf" target="_blank" rel="noopener">Fiche 4 · Et si les gens arrêtent de travailler&nbsp;?</a></li>
+        <li><a href="argent.pdf" target="_blank" rel="noopener">Fiche 5 · D'où vient l'argent&nbsp;?</a></li>
+        <li><a href="entreprises.pdf" target="_blank" rel="noopener">Fiche 6 · Pourquoi les entreprises accepteraient-elles&nbsp;?</a></li>
+        <li><a href="dette.pdf" target="_blank" rel="noopener">Fiche 7 · Et la dette de 3 000 milliards, on fait quoi&nbsp;?</a></li>
+        <li><a href="energie.pdf" target="_blank" rel="noopener">Fiche 8 · Pourquoi le prix de l'énergie flambe à chaque crise&nbsp;?</a></li>
+        <li><a href="europe.pdf" target="_blank" rel="noopener">Fiche 9 · Et l'Europe, elle dira quoi&nbsp;?</a></li>
+        <li><a href="retraites.pdf" target="_blank" rel="noopener">Fiche 10 · Et les retraites, ça devient quoi&nbsp;?</a></li>
+        <li><a href="enfants.pdf" target="_blank" rel="noopener">Fiche 11 · Avoir des enfants sera enfin reconnu&nbsp;?</a></li>
+        <li><a href="salaire.pdf" target="_blank" rel="noopener">Fiche 12 · Comment mon salaire est-il décidé&nbsp;?</a></li>
+        <li><a href="ecologie.pdf" target="_blank" rel="noopener">Fiche 13 · Croissance verte ou vraie rupture&nbsp;?</a></li>
+        <li><a href="communisme.pdf" target="_blank" rel="noopener">Fiche 14 · C'est différent du communisme&nbsp;?</a></li>
+      </ul>
+    </div>
+    <div class="more">
+      <h2>Pour aller plus loin</h2>
+      <ul>
+        <li><a href="une-dette-sacree.pdf" target="_blank" rel="noopener">L'essai <em>Une dette sacrée. Le Salaire à Vie, une utopie réalisable</em></a> (PDF, 76 pages)</li>
+        <li>La chaîne YouTube <em>Une dette sacrée</em></li>
+        <li>Instagram @emanciperletravail</li>
+      </ul>
+    </div>
+    <div class="actions"><button class="btn ghost" id="again">Rejouer</button></div>
+  </section>
+</main>
+
+<footer>
+  <b>Une dette sacrée</b>
+  <span>Réponses comptées de façon anonyme, sans cookie ni donnée personnelle.</span>
+  <span>Salaire à Vie · Utopie réalisable</span>
+</footer>
+
+<script>
+const BRIEF = [
+  ["Un salaire pour toute la vie", "Dès 18 ans, chaque personne reçoit un salaire de 2 000 à 6 000 euros nets par mois, selon sa qualification. Une caisse commune le verse à la place de l'employeur : la Caisse Autonome des Salaires."],
+  ["Les biens communs sortent du marché", "Santé, énergie, eau, transports, logement locatif, éducation : environ 55 % de l'économie. Les entreprises y deviennent des Unités de Production, sans actionnaires, gérées par celles et ceux qui y travaillent avec les usager·e·s. Les prix sont fixés au coût réel."],
+  ["Le privé continue d'exister", "Le marché et les entreprises privées restent. Leurs salarié·e·s reçoivent un socle de 2 000 euros de la caisse commune, que l'employeur complète jusqu'au salaire habituel."],
+  ["Un financement par cotisation", "Chaque Unité de Production verse 60 % de la richesse qu'elle crée à la caisse des salaires et 25 % à une caisse d'investissement. Elle garde 15 % pour elle. Les propriétaires des entreprises socialisées sont indemnisé·e·s : personne n'est exproprié."]
+];
+
+const S = [
+  {
+    theme: "Santé",
+    text: "La maternité de ta ville ferme. Une clinique privée ouvre à vingt minutes de chez toi, avec des dépassements d'honoraires.",
+    options: [
+      { t: "Je prends une meilleure mutuelle.", c: false,
+        r: "Ta mutuelle te coûte plus cher chaque mois. Elle rembourse une bonne partie des dépassements de la clinique, rarement la totalité. Ta voisine a une mutuelle d'entrée de gamme. Pour elle, le choix se fera entre des dépassements à payer de sa poche et une heure de route jusqu'à la maternité publique la plus proche. Rien ne pousse la clinique à baisser ses tarifs tant que ses patient·e·s sont bien couvert·e·s." },
+      { t: "J'irai à la clinique, on verra bien.", c: false,
+        r: "Tu découvriras le montant des dépassements sur le devis et tu paieras ce que ta mutuelle ne couvre pas. La clinique remplit ses lits. Pour l'agence régionale de santé, le territoire reste couvert et la maternité publique n'a plus de raison de rouvrir. Si un jour les accouchements ne rapportent plus assez, la clinique pourra fermer son service à son tour. Les cliniques privées ne réalisent déjà plus que 17 % des accouchements, contre 24 % en 2014 (Drees)." },
+      { t: "Je rejoins le collectif qui se bat pour la rouvrir.", c: true,
+        r: "Pétitions, rassemblements, motions des conseils municipaux, recours en justice : une mobilisation large peut retarder une fermeture, parfois l'empêcher. La décision revient pourtant à l'agence régionale de santé. Elle tranche d'après le nombre d'accouchements et les postes de médecins vacants, avec un budget que le Parlement vote chaque année. Au Blanc, dans l'Indre, la maternité a fermé en 2018 faute de personnel, malgré l'occupation des locaux et des mois de mobilisation." }
+    ],
+    model: "La santé devient un bien commun. Une maternité ne ferme plus parce qu'elle n'est pas rentable. Chaque service est dirigé par un conseil élu par les soignant·e·s et les patient·e·s. S'il manque de moyens, on le réorganise et on le finance au lieu de le fermer.",
+    fiche: ["hopital.pdf", "Et si votre hôpital n'avait plus besoin de faire du profit ?"]
+  },
+  {
+    theme: "Travail",
+    text: "Ton employeur propose une prime à celles et ceux qui acceptent de travailler le dimanche. Plusieurs collègues ont déjà dit oui.",
+    options: [
+      { t: "J'accepte, la prime tombe bien.", c: false,
+        r: "La prime arrive sur ta fiche de paie dès le mois suivant. Tu la paies en dimanches loin de tes proches. Si tu as des enfants, il faudra aussi payer une garde, puisque la plupart des crèches ferment ce jour-là. Avec assez de volontaires, l'ouverture du dimanche devient la norme. La prime pourra être renégociée un jour, sans que le site referme le dimanche." },
+      { t: "Je refuse. Chacun·e décide pour soi.", c: false,
+        r: "Tu gardes ton dimanche. En principe, la loi interdit de te sanctionner pour ce refus. Le site ouvrira quand même avec les volontaires. Quand les volontaires se lasseront, la pression se reportera sur celles et ceux qui ont dit non : des plannings moins arrangeants, des remarques à l'entretien annuel. Les conditions du travail le dimanche se fixeront sans toi." },
+      { t: "J'en parle aux collègues pour qu'on réponde ensemble.", c: true,
+        r: "À plusieurs, vous pouvez poser vos conditions avant de dire oui : une prime garantie par un accord écrit et un roulement pour que personne ne travaille tous les dimanches. Signé avec les représentant·e·s du personnel, cet accord engage l'employeur. Le point faible, ce sont les fins de mois. Celles et ceux qui ont besoin de la prime pour payer le loyer ne pourront pas tenir longtemps si l'employeur refuse vos conditions." }
+    ],
+    model: "La caisse commune te verse une partie de ton salaire, quoi qu'il arrive : un socle de 2 000 euros par mois, y compris dans une entreprise privée. L'employeur complète jusqu'à ton salaire habituel. Si tu refuses le dimanche, tu gardes de quoi payer ton loyer.",
+    fiche: ["travail.pdf", "Et si les gens arrêtent de travailler ?"]
+  },
+  {
+    theme: "Salaire",
+    text: "Tu travailles à temps plein. Une fois le loyer et les courses payés, il ne reste presque rien à la fin du mois.",
+    options: [
+      { t: "Je fais des heures sup ou je prends un deuxième boulot.", c: false,
+        r: "Tu finis le mois un peu plus large et tu y laisses tes soirées ou tes samedis. Pour l'employeur, des heures sup sont plus souples qu'une augmentation : il peut les arrêter dès qu'il n'en a plus besoin. Ton salaire horaire ne bouge pas. Le jour où la fatigue ou la santé t'obligent à lever le pied, tu retrouves exactement la même fin de mois." },
+      { t: "Je demande la prime d'activité.", c: false,
+        r: "La demande se fait en ligne. Ensuite, tu confirmes tes revenus tous les trois mois et le montant peut changer à chaque fois. Si ton employeur t'augmente, ta prime baisse et tu ne gardes qu'une partie de la hausse. C'est l'argent public qui complète ton salaire. L'entreprise qui paie peu n'a rien à changer." },
+      { t: "Je me syndique pour peser sur les salaires de toute la profession.", c: true,
+        r: "Dans une entreprise où un·e délégué·e syndical·e a été désigné·e, la direction doit négocier les salaires, en principe chaque année. Rien ne l'oblige à signer. Dans la branche, ce sont les syndicats qui obtiennent la révision des grilles de la convention collective, que tu sois syndiqué·e ou non. Une hausse de quelques pour cent disparaît vite dans le loyer ou le prix de l'énergie, qui ne se négocient ni avec ton employeur ni dans ta branche." }
+    ],
+    model: "Personne ne gagne moins de 2 000 euros nets par mois, dès 18 ans. Dans le privé, la caisse commune verse ce socle et l'employeur complète au-delà. Les dépenses contraintes baissent aussi : la santé est prise en charge intégralement et les transports publics deviennent gratuits. L'énergie est vendue à un prix d'usage stable.",
+    fiche: ["travail.pdf", "Et si les gens arrêtent de travailler ?"]
+  },
+  {
+    theme: "Cotisations",
+    text: "Tu demandes une augmentation. Ta responsable répond qu'elle aimerait bien, mais qu'avec « toutes les charges », ce n'est pas possible.",
+    options: [
+      { t: "Elle a raison, il faudrait baisser les charges.", c: false,
+        r: "Près du SMIC, les cotisations patronales sont déjà très faibles. Les allègements diminuent à mesure que le salaire monte : t'augmenter fait perdre une partie de ces allègements à ton employeur. Chaque nouvelle baisse retire de l'argent aux hôpitaux et aux caisses de retraite, ou se paie par l'impôt. Rien ne garantit que l'économie finira sur ta fiche de paie." },
+      { t: "Je préfère une prime sans cotisations, j'aurai plus de net.", c: false,
+        r: "Le jour du versement, ton net est plus gros. La prime ne compte pourtant ni pour ta retraite ni pour ton chômage. En cas d'arrêt maladie, tes indemnités seront calculées sans elle. Ton employeur peut la verser une année et pas la suivante, alors qu'une augmentation reste acquise. Chaque prime de ce type prive aussi la Sécurité sociale de recettes." },
+      { t: "Les cotisations, c'est mon salaire mis en commun.", c: true,
+        r: "Regarde ta fiche de paie. Les cotisations paient la pension de tes parents et tes indemnités quand tu es en arrêt maladie. C'est du salaire, versé à une caisse plutôt que sur ton compte. Ce raisonnement ne t'apporte pas ton augmentation pour autant. Le budget de ta responsable dépend de sa direction. Dans les débats budgétaires, les ministres parlent encore de « charges »." }
+    ],
+    model: "Dans le privé, la caisse commune verse à chaque salarié·e un socle de 2 000 euros par mois et l'employeur complète jusqu'au salaire habituel. Ton net ne bouge pas, mais le coût du travail baisse pour l'entreprise. Ta responsable aurait plus de marge pour t'augmenter.",
+    fiche: ["entreprises.pdf", "Pourquoi les entreprises accepteraient-elles ?"]
+  },
+  {
+    theme: "Retraites",
+    text: "Ton banquier te conseille d'ouvrir un plan d'épargne retraite. « Avec toutes ces réformes, on ne sait jamais. »",
+    options: [
+      { t: "Je signe, par prudence.", c: false,
+        r: "Ton argent sera bloqué jusqu'à la retraite, sauf cas particuliers comme l'achat de ta résidence principale. La banque prélève des frais chaque année. Le montant final dépendra en partie des marchés financiers au moment où tu partiras. L'avantage fiscal profite surtout aux personnes qui paient beaucoup d'impôt sur le revenu. Plus cette épargne grossit, plus il devient facile de présenter la répartition comme un système dépassé et de rogner les pensions à la réforme suivante." },
+      { t: "Je préfère acheter un appartement à louer.", c: false,
+        r: "Il te faudra un apport, puis un crédit sur vingt ans que le loyer remboursera en partie. Prévois aussi des mois sans locataire et des travaux à payer. Quand beaucoup de ménages achètent pour louer, les prix montent dans les villes où il y a du travail. Les jeunes actif·ve·s y paient des loyers plus lourds. Ta retraite sera financée par ton ou ta locataire, sans cotisation ni règle commune." },
+      { t: "Non merci. Je préfère défendre la retraite par répartition.", c: true,
+        r: "Chaque mois, les cotisations des actif·ve·s financent l'essentiel des pensions de 17 millions de retraité·e·s, sans gestionnaire de fonds pour prélever des frais. Un krach boursier ne touche pas ces pensions. Le risque vient de la loi, qui fixe l'âge de départ et le niveau des pensions. La réforme de 2023 a reculé l'âge légal malgré des mois de grèves et de manifestations. Fin 2025, une autre loi l'a suspendue, jusqu'en 2028 seulement." }
+    ],
+    model: "La retraite est déjà un salaire versé à des personnes qui n'ont plus d'emploi. Le Salaire à Vie étend ce principe à toute la vie, dès 18 ans. Il n'y a plus d'âge légal de départ : on travaille tant qu'on le souhaite. Les pensions actuelles sont maintenues intégralement.",
+    fiche: ["retraites.pdf", "Et les retraites, ça devient quoi ?"]
+  },
+  {
+    theme: "Parentalité",
+    text: "Ta sœur élève seule ses deux enfants. Les démarches pour ses aides lui prennent des heures. Elle redoute chaque courrier de la CAF qui pourrait lui réclamer un trop-perçu. Pour toi :",
+    options: [
+      { t: "Les aides existent, à elle de bien faire les démarches.", c: false,
+        r: "Encore faut-il savoir à quoi elle a droit. D'après la Drees, un tiers des foyers qui pourraient toucher le RSA ne le perçoivent pas. Chaque aide a ses conditions et ses justificatifs. Un contrat court ou un changement de situation oblige à tout redéclarer. La moindre erreur revient des mois plus tard en trop-perçu, retenu sur les versements suivants. Ta sœur porte cette charge en plus de son travail et de ses enfants : garder chaque papier et réclamer, mois après mois, de quoi faire vivre sa famille." },
+      { t: "C'est d'abord à la famille de l'aider.", c: false,
+        r: "Tu peux garder les enfants un soir ou avancer l'argent d'une facture. Ta sœur a la chance de t'avoir. Une mère ou un père seul·e, sans famille proche ou brouillé·e avec elle, n'a pas cette ressource. Ton aide dépend aussi de ta propre situation : le jour où tu perds ton emploi ou déménages loin, ta sœur perd son appui. Ni ton temps ni ton argent ne réduisent le nombre de dossiers qu'elle doit remplir." },
+      { t: "Élever des enfants est un travail : la société devrait le payer.", c: true,
+        r: "Aujourd'hui, ce travail ne donne droit à aucun salaire. Les allocations familiales commencent au deuxième enfant et leur montant baisse quand les revenus augmentent. Payer les parents peut aussi se retourner contre les femmes. En 1994, l'allocation parentale d'éducation a été étendue au deuxième enfant. En trois ans, le taux d'activité des mères de deux enfants, dont un de moins de trois ans, est retombé à son niveau du début des années 1980. Tout dépend de la façon dont ce travail est payé : à la place du salaire ou en plus." }
+    ],
+    model: "Chaque parent reçoit un Supplément Parental de Salaire, versé automatiquement par la caisse commune, sans condition de ressources ni démarche. Pour ta sœur, seule avec deux enfants : 550 euros par mois, en plus de son propre salaire. Elle n'a ni dossier à remplir ni trop-perçu à craindre.",
+    fiche: ["enfants.pdf", "Avoir des enfants sera enfin reconnu ?"]
+  },
+  {
+    theme: "Énergie",
+    text: "Ta facture de chauffage a doublé. Un démarcheur te propose un contrat à prix bloqué pendant deux ans. C'est plus cher que ton tarif actuel, mais tu serais « protégé·e ».",
+    options: [
+      { t: "Je signe, au moins je suis tranquille.", c: false,
+        r: "Pendant deux ans, tu paies plus cher que ton tarif actuel pour un prix du kilowattheure qui ne bouge plus. Le fournisseur se couvre sur les marchés et te facture cette couverture, avec sa marge. Les ménages qui n'ont pas les moyens de payer cette tranquillité restent exposés. Pour eux, le prix continue de suivre les marchés européens." },
+      { t: "Je baisse le chauffage et je tiens bon.", c: false,
+        r: "Un degré de moins, c'est environ 7 % d'énergie de chauffage économisée, selon l'Ademe. Passé un certain point, le logement devient froid et humide, ce qui abîme la santé. Les ménages les plus modestes chauffent souvent au minimum : pour eux, il n'y a plus rien à baisser. À la prochaine crise, les prix remonteront de la même façon, puisque rien n'a changé dans la manière dont ils se fixent." },
+      { t: "Je refuse et je signe la pétition pour un tarif public de l'énergie.", c: true,
+        r: "Une pétition ne fixe aucun prix, mais elle fait de ta facture une question politique. L'État sait agir quand il le décide : en février 2022, il a limité à 4 % la hausse du tarif réglementé de l'électricité. Les boucliers sur le gaz et l'électricité ont coûté plus de 20 milliards d'euros en deux ans, selon la Commission de régulation de l'énergie. Les tarifs ont ensuite fortement augmenté en 2023 et 2024. La protection a duré tant que le budget la payait." }
+    ],
+    model: "Une caisse publique achète l'énergie importée au prix mondial et amortit les pics grâce à une réserve permanente. Pour le chauffage, le gaz et l'électricité, tu paies un prix d'usage stable, qui ne suit plus chaque crise.",
+    fiche: ["energie.pdf", "Pourquoi le prix de l'énergie flambe à chaque crise ?"]
+  },
+  {
+    theme: "Vie privée",
+    text: "Une appli gratuite propose de suivre ton sommeil et tes pas. En échange, tes données sont partagées avec des « partenaires ».",
+    options: [
+      { t: "J'accepte, c'est pratique.", c: false,
+        r: "L'appli est bien faite et ne te coûte rien. Tu la paies avec ce que tes nuits et tes pas disent de toi : l'heure à laquelle tu te lèves, les semaines où tu dors mal. Les « partenaires » sont souvent des régies publicitaires ou des courtiers en données, qui revendent ces profils sans que tu saches à qui. Supprimer l'appli n'efface pas ce qui a déjà été transmis." },
+      { t: "Je refuse et je gère ma vie privée moi-même.", c: false,
+        r: "Tes nuits restent à toi. Pour le reste, il faudra décocher les cases et refuser les cookies, appli après appli, site après site. Mais tes proches ont souvent accepté. Ton numéro et tes photos se trouvent déjà dans leurs téléphones, synchronisés avec des serveurs que tu ne contrôles pas." },
+      { t: "Je refuse et je signale l'appli à la CNIL.", c: true,
+        r: "Une plainte peut déclencher un contrôle. La CNIL inflige régulièrement des amendes, y compris à Google ou Amazon. Les procédures prennent des mois, parfois des années. Surtout, une grande partie de la collecte reste légale dès lors que tu as cliqué sur « J'accepte ». Pour l'empêcher, il faudrait une loi qui interdise certaines collectes même avec ton accord." }
+    ],
+    model: "Le système n'a besoin que de quatre informations sur toi : ton statut, ton territoire, ta disponibilité à la mobilité et ta qualification. Le reste est interdit de collecte par les textes fondamentaux. Ce registre public tourne en logiciel libre : n'importe qui peut en vérifier le code.",
+    fiche: ["donnees.pdf", "Est-ce que l'État va tout savoir sur moi ?"]
+  },
+  {
+    theme: "Dette",
+    text: "Au repas de famille, ton oncle lance : « Un pays, c'est comme un ménage. On ne dépense pas plus que ce qu'on gagne. »",
+    options: [
+      { t: "Il a raison, il faut couper dans les dépenses.", c: false,
+        r: "Si ton oncle a emprunté sur vingt ans pour sa maison, personne ne l'a accusé de vivre au-dessus de ses moyens. Un État lève l'impôt et ne part jamais à la retraite. Couper dans les dépenses, c'est supprimer des postes à l'hôpital et à l'école. Les intérêts continuent de courir. En freinant l'activité, les coupes font aussi baisser les recettes fiscales." },
+      { t: "Il exagère, mais il faudra bien rembourser un jour.", c: false,
+        r: "Un État ne rembourse jamais sa dette d'un coup. Chaque année, l'État emprunte autour de 300 milliards d'euros, dont plus de la moitié sert à rembourser des emprunts arrivés à échéance. La charge réelle tient aux intérêts : plus de 50 milliards d'euros par an. L'idée qu'« il faudra bien rembourser » sert pourtant à justifier chaque plan d'économies." },
+      { t: "Un État n'est pas un ménage. Tout dépend de qui crée la monnaie.", c: true,
+        r: "Jusqu'en 1993, la Banque de France pouvait avancer de l'argent à l'État. Les traités européens l'interdisent désormais. Chaque déficit s'emprunte sur les marchés. Plus de la moitié de cette dette est détenue par des investisseurs non résidents, qui en touchent les intérêts. Ce cadre a été choisi et peut être changé, mais pas par la France seule : réviser un traité exige l'accord des vingt-sept États." }
+    ],
+    model: "Une banque socialisée crée de la monnaie sans intérêt, de façon ciblée, pour des caisses distinctes du budget de l'État. Quand les cotisations rentrent, cette monnaie est détruite. On arrête de fabriquer de la dette nouvelle.",
+    fiche: ["dette.pdf", "Et la dette de 3 000 milliards, on fait quoi ?"]
+  },
+  {
+    theme: "Emploi",
+    text: "Ton usine ferme. On te propose un reclassement sur un poste moins qualifié, à cinquante kilomètres, avec un salaire plus bas. Pour toi :",
+    options: [
+      { t: "Un emploi, c'est un emploi : il faut accepter.", c: false,
+        r: "Le reclassement te laisse un emploi, avec un salaire plus bas et cent kilomètres de route en plus chaque jour. Le carburant et la fatigue reprennent une partie de ce que tu as sauvé. Ton savoir-faire ne te suit pas, car ton salaire dépend du poste que tu occupes. Le nouveau est moins qualifié. Tes prochaines augmentations partiront de ce salaire-là." },
+      { t: "C'est à chacun·e de se former pour rebondir.", c: false,
+        r: "Ton compte personnel de formation se remplit de 500 euros par an, dans la limite de 5 000. Une vraie reconversion coûte souvent plus et prend des mois. Pendant ce temps, tu vis de l'allocation chômage, qui s'arrête au plus tard au bout de dix-huit mois si tu as moins de 55 ans. Celles et ceux qui ont des économies ou un·e conjoint·e bien payé·e rebondissent plus facilement que les autres." },
+      { t: "Mon salaire devrait suivre ma qualification, quel que soit le poste.", c: true,
+        r: "Le statut des fonctionnaires repose déjà sur ce principe. Le grade appartient au ou à la fonctionnaire : si son poste est supprimé, il ou elle garde son grade et l'administration doit lui trouver un autre poste. Dans le privé, ta qualification ne compte sur ta fiche de paie que tant que ton contrat court. Et dans la fonction publique elle-même, près d'un agent sur quatre est désormais contractuel·le, sans grade." }
+    ],
+    model: "Le salaire est attaché à la personne. Comme un diplôme ou un grade, ta qualification ne s'efface pas. Dans les secteurs socialisés, si ton unité ferme, tu gardes ton salaire et on t'accompagne vers une autre activité. Dans le privé, le socle de 2 000 euros reste versé par la caisse commune, quoi qu'il arrive.",
+    fiche: ["salaire.pdf", "Comment mon salaire est-il décidé ?"]
+  },
+  {
+    theme: "Entreprise",
+    text: "Tu diriges une entreprise de quinze personnes. Un fonds d'investissement veut la racheter. Beau chèque, mais il prévoit de « rationaliser ».",
+    options: [
+      { t: "Je vends. C'est le fruit de mon travail.", c: false,
+        r: "Le chèque peut financer ta retraite. Beaucoup de patron·ne·s de petites entreprises comptent dessus. Les fonds rachètent souvent avec de la dette, que l'entreprise rembourse ensuite sur ses propres bénéfices. Pour tenir ces remboursements et revendre avec une plus-value quelques années plus tard, ils « rationalisent » : postes regroupés, activités confiées à des sous-traitants. Tes quinze salarié·e·s n'auront pas leur mot à dire." },
+      { t: "Je refuse et je continue seul·e.", c: false,
+        r: "L'entreprise reste à toi. La question reviendra au moment de ta retraite, ou plus tôt si ta santé lâche. Les acheteurs seront alors les mêmes. Faute de repreneur, des petites entreprises qui marchent ferment chaque année. D'ici là, quinze emplois dépendent toujours d'une seule personne." },
+      { t: "Je propose aux salarié·e·s de reprendre l'entreprise ensemble.", c: true,
+        r: "Le droit le permet. Depuis 2014, les salarié·e·s doivent être prévenu·e·s au moins deux mois avant la vente. Une SCOP d'amorçage leur laisse plusieurs années pour devenir majoritaires au capital. L'argent bloque : les banques suivent rarement des salarié·e·s sans apport. Leur offre sera en général inférieure à celle du fonds et tu seras payé·e en plusieurs fois. L'entreprise reste sur place, aux mains de celles et ceux qui la font tourner." }
+    ],
+    model: "Une entreprise peut devenir une Unité de Production, gérée par celles et ceux qui y travaillent. L'ancien·ne propriétaire est indemnisé·e. Une caisse d'investissement finance le matériel et une structure d'accompagnement aide à monter la gouvernance. Pas de banque à convaincre.",
+    fiche: ["entreprises.pdf", "Pourquoi les entreprises accepteraient-elles ?"]
+  },
+  {
+    theme: "Création",
+    text: "Tu as un projet utile : un atelier de réparation de vélos dans ton quartier. Il faudrait 30 000 euros pour démarrer. Tu n'as pas d'épargne. Pour toi :",
+    options: [
+      { t: "C'est le jeu : pour entreprendre, il faut prendre le risque d'emprunter.", c: false,
+        r: "Sans apport, la banque te demandera une caution personnelle, la tienne ou celle d'un parent. Les premiers mois, l'atelier ne pourra pas encore te payer. Si l'atelier ferme au bout de deux ans, la dette reste : c'est toi, ou la personne qui s'est portée caution, qui la rembourse. Seules les personnes qui ont un patrimoine derrière elles peuvent prendre ce risque sans trembler." },
+      { t: "Sans épargne, mieux vaut attendre ou renoncer.", c: false,
+        r: "Tu ne risques rien. Ton quartier n'a toujours pas d'atelier. Les vélos crevés finissent à la cave ou à la déchetterie. Ce genre de projet rapporte peu : une réparation doit coûter moins cher qu'un vélo neuf, sinon personne ne répare. Aucun investisseur ne s'y intéressera. L'idée attendra quelqu'un qui a de l'argent à y mettre." },
+      { t: "Un projet utile devrait pouvoir être financé par une caisse commune.", c: true,
+        r: "Des outils existent : prêts d'honneur à taux zéro, garanties de France Active, financement participatif, aides de la région. La plupart restent des prêts ou des garanties de prêt. Ils servent surtout à rassurer la banque pour qu'elle prête le reste. Ton dossier devra montrer que l'atelier dégagera de quoi rembourser. Un atelier utile mais peu rentable a toujours du mal à passer." }
+    ],
+    model: "Tu présentes ton projet, avec celles et ceux qui le portent, à un comité d'aide à la création. S'il est retenu, la caisse d'investissement paie le matériel et les locaux. Il n'y a pas de prêt à rembourser et tu gardes ton salaire pendant le lancement. L'outil appartient à la collectivité et ton équipe en a l'usage.",
+    fiche: ["argent.pdf", "D'où vient l'argent ?"]
+  },
+  {
+    theme: "Écologie",
+    text: "Une marque de vêtements lance une collection « éco-responsable », un peu plus chère que d'habitude. Pour toi :",
+    options: [
+      { t: "Acheter vert, c'est déjà agir.", c: false,
+        r: "Ton vêtement pèse un peu moins sur la planète. Son surcoût écarte les budgets les plus serrés. Pour la marque, la collection verte s'ajoute aux autres rayons au lieu de les remplacer. Elle doit vendre davantage chaque année pour satisfaire ses actionnaires. Au total, elle produit plus de vêtements. Une partie seulement est un peu plus propre." },
+      { t: "Le plus efficace, c'est d'acheter moins.", c: false,
+        r: "Ton empreinte baisse pour de bon. Si les ventes reculent durablement, la marque réagit comme toute entreprise : promotions, publicité, puis fermetures de magasins et suppressions de postes. Personne n'a prévu ce que deviendront celles et ceux qui fabriquaient et vendaient ces vêtements." },
+      { t: "Tant que la marque doit vendre toujours plus, mon panier ne change pas grand-chose.", c: true,
+        r: "Une marque qui a des actionnaires est jugée chaque année sur sa croissance. Même si sa direction le voulait, elle ne pourrait pas décider seule de vendre moins. Les leviers sont donc politiques. La loi adoptée en juin 2026 interdit la publicité pour la mode ultra-éphémère, mais elle vise Shein ou Temu et épargne les marques classiques. Retirer aux actionnaires le pouvoir de décider de ce qu'on produit demanderait d'aller bien plus loin." }
+    ],
+    model: "Les Unités de Production n'ont pas d'actionnaires. Rien ne les pousse à produire au-delà des besoins, qui sont débattus démocratiquement. Une caisse dédiée oriente l'investissement vers la sobriété et la décarbonation.",
+    fiche: ["ecologie.pdf", "Croissance verte ou vraie rupture ?"]
+  },
+  {
+    theme: "Démocratie",
+    text: "Ta direction annonce que ton site déménage à quarante kilomètres. Personne n'a été consulté. Pour toi :",
+    options: [
+      { t: "C'est à la direction de décider, c'est son rôle.", c: false,
+        r: "La direction décide et tu t'organises : quatre-vingts kilomètres de plus par jour, les horaires de crèche ou d'école à revoir. Les collègues sans voiture, ou qui s'occupent d'un parent âgé, démissionneront peut-être. La direction a fait ses comptes : le loyer des nouveaux locaux, les aides de la commune d'accueil. Vos trajets n'y figuraient pas." },
+      { t: "Celles et ceux à qui ça ne convient pas peuvent partir.", c: false,
+        r: "À quarante kilomètres, le déménagement modifie souvent le contrat de travail. Sans clause de mobilité, tu peux refuser : l'employeur doit alors te garder ou te licencier. Tu toucheras le chômage, mais tu auras perdu ton poste. Les collègues dont le métier est recherché retrouveront vite un emploi ailleurs. Les autres feront la route. Personne n'aura demandé de comptes à la direction." },
+      { t: "Une décision qui change le quotidien de tout le monde devrait se voter.", c: true,
+        r: "Tu votes aux municipales et aux législatives. Au travail, dans une entreprise d'au moins cinquante salarié·e·s, le comité social et économique doit être consulté sur un déménagement, mais son avis ne bloque rien. Dans les grandes entreprises, un ou deux sièges du conseil d'administration reviennent aux salarié·e·s, toujours minoritaires. Dans une SCOP, les salarié·e·s associé·e·s votent, une personne, une voix. Partout ailleurs, la décision revient à celles et ceux qui possèdent l'entreprise." }
+    ],
+    model: "Dans les secteurs socialisés, une Unité de Production ne peut être ni vendue ni délocalisée pour un rendement. Celles et ceux qui y travaillent en ont l'usage collectif et décident en assemblée, avec les usager·e·s. Dans le privé, le socle de 2 000 euros rend le refus moins risqué.",
+    fiche: ["communisme.pdf", "C'est différent du communisme ?"]
+  }
+];
+
+const PROFILES = [
+ {
+  "min": 0.8571428571428571,
+  "title": "Tu cherches d'abord la solution à plusieurs",
+  "parts": [
+   [
+    "Ce que disent tes réponses",
+    "Presque à chaque fois, tu as choisi la réponse qui passe par les autres : rejoindre le collectif de la maternité, parler aux collègues avant d'accepter le dimanche. Pour toi, un problème que beaucoup de gens partagent se règle mieux à plusieurs."
+   ],
+   [
+    "Ce que le quiz voulait montrer",
+    "Même ces réponses avaient leurs limites. La maternité peut rouvrir puis refermer au budget suivant. L'accord sur le dimanche tient tant que personne n'a trop besoin de la prime. Le collectif se bat avec les règles actuelles, où le revenu dépend de l'employeur et l'investissement des actionnaires."
+   ],
+   [
+    "Ce que propose le Salaire à Vie",
+    "Le modèle compte sur des règles plus que sur la bonne volonté. Une caisse commune te verse au moins 2 000 euros par mois, quel que soit ton employeur : tu peux lui dire non sans risquer ton loyer. Dans la santé ou l'énergie, les entreprises n'ont plus d'actionnaires. Celles et ceux qui y travaillent les dirigent avec les usager·e·s."
+   ],
+   [
+    "Pour aller plus loin",
+    "Tu es bien placé·e pour chercher les failles du modèle. Les fiches détaillent chaque mécanisme et répondent à une objection. Commence par celles qui te semblent les plus fragiles."
+   ]
+  ]
+ },
+ {
+  "min": 0.5714285714285714,
+  "title": "Le commun, quand il te paraît à portée",
+  "parts": [
+   [
+    "Ce que disent tes réponses",
+    "Tu as choisi la réponse commune dans plus de la moitié des situations. Ailleurs, tu as préféré une solution qui dépend de toi ou de tes proches. Tu fais au cas par cas, selon ce qui te semble faisable."
+   ],
+   [
+    "Ce que le quiz voulait montrer",
+    "Regarde les situations où tu as choisi seul·e. Souvent, la solution commune existait, mais elle était lente ou te coûtait plus qu'aux autres. Poser ses conditions à plusieurs, c'est risquer la prime quand on en a besoin. Une hausse négociée dans la branche fond vite dans le loyer. Dans les règles actuelles, ton calcul se tient."
+   ],
+   [
+    "Ce que propose le Salaire à Vie",
+    "Le modèle parie que la solution commune peut aussi devenir la plus sûre pour toi. Une caisse commune te verse au moins 2 000 euros par mois, quoi que décide ton employeur. La maternité ne ferme plus faute d'être rentable. Dans ces conditions, le même calcul te mènerait vers le commun."
+   ],
+   [
+    "Pour aller plus loin",
+    "Ouvre en priorité les fiches des situations où tu as choisi seul·e. Elles expliquent comment le modèle traiterait le problème et disent ce qu'il laisse sans réponse."
+   ]
+  ]
+ },
+ {
+  "min": 0.2857142857142857,
+  "title": "Tu te protèges d'abord, sans fermer la porte au commun",
+  "parts": [
+   [
+    "Ce que disent tes réponses",
+    "Tu as choisi la réponse commune quelques fois. Le plus souvent, tu as pris la solution qui dépend de toi : te couvrir ou faire un effort de plus. Quand personne d'autre ne s'occupe de ta fin de mois, c'est la réponse logique."
+   ],
+   [
+    "Ce que le quiz voulait montrer",
+    "Ces choix produisent autre chose quand beaucoup de gens les font en même temps. La clinique garde ses tarifs parce que ses patient·e·s sont bien couvert·e·s. Les heures sup dispensent l'employeur d'augmenter le salaire horaire. La facture finit par retomber sur celles et ceux qui n'ont ni bonne mutuelle ni épargne."
+   ],
+   [
+    "Ce que propose le Salaire à Vie",
+    "Le modèle part du même constat que toi : chacun·e cherche d'abord à se protéger. Il fait en sorte que cette protection ne dépende plus de ta mutuelle ou de ton épargne. Une caisse commune te verse au moins 2 000 euros par mois, toute ta vie, quel que soit ton employeur. Tes soins sont pris en charge intégralement."
+   ],
+   [
+    "Pour aller plus loin",
+    "Tu n'as pas à nous croire sur parole. Chaque fiche explique le mécanisme proposé, avec ses limites."
+   ]
+  ]
+ },
+ {
+  "min": 0,
+  "title": "Tu comptes d'abord sur toi",
+  "parts": [
+   [
+    "Ce que disent tes réponses",
+    "Dans presque toutes les situations, tu as choisi ce qui dépend de toi ou de tes proches. Une pétition ne paie pas la facture. Un collectif peut se battre des mois pour rien."
+   ],
+   [
+    "Ce que le quiz voulait montrer",
+    "Additionnés, ces choix produisent des effets que personne n'a choisis. La clinique garde ses tarifs et la voisine sans bonne mutuelle fait une heure de route pour accoucher. Le travail du dimanche devient la règle et la collègue qui voulait garder ses week-ends finit par céder. Ta méfiance envers le collectif a ses raisons, entre promesses non tenues et réformes qui reprennent ce qui avait été accordé."
+   ],
+   [
+    "Ce que propose le Salaire à Vie",
+    "Le modèle repose sur des règles qui ne dépendent ni de ton employeur ni du gouvernement du moment. Au moins 2 000 euros par mois te sont versés à vie par une caisse que l'employeur ne contrôle pas. Les services essentiels ne peuvent plus être vendus ni fermés parce qu'ils ne rapportent pas assez."
+   ],
+   [
+    "Pour aller plus loin",
+    "Si tu restes sceptique, tant mieux. Les quatorze fiches disent comment ça fonctionnerait et ce qui reste à résoudre. Elles te permettront de vérifier si on te raconte des histoires."
+   ]
+  ]
+ }
+];
+
+const $ = (id) => document.getElementById(id);
+// Statistiques : compteurs stockés dans une feuille Google (Apps Script).
+const STATS_URL = "https://script.google.com/macros/s/AKfycby5vMHkvjYTzZ0yPwDfqOuxFP2sg-d-1hTZLhSSblV9gFD1CWuIUH9hrD1WC1ltVHgOmg/exec";
+S.forEach((s) => s.options.forEach((o, i) => { o.i = i; }));
+let counts = null;
+function loadCounts() {
+  if (!STATS_URL) return;
+  fetch(STATS_URL).then((r) => r.json()).then((d) => { counts = d; }).catch(() => {});
+}
+function sendVote(s, o) {
+  if (!STATS_URL) return;
+  try {
+    fetch(STATS_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ s: s.theme, o: o.i, t: o.t }) });
+  } catch (e) {}
+}
+function showStat(s, o) {
+  const box = $("stat");
+  if (!counts) { box.hidden = true; return; }
+  const c = counts[s.theme] || {};
+  let total = 1, same = 1;
+  s.options.forEach((x) => { total += Number(c[x.i] || 0); });
+  same += Number(c[o.i] || 0);
+  const pct = Math.round((100 * same) / total);
+  $("stat-val").textContent = pct + " %";
+  $("stat-note").textContent = total < 30
+    ? "Part des participant·e·s qui ont fait le même choix que toi. Encore peu de réponses : ce chiffre va bouger."
+    : "Part des participant·e·s qui ont fait le même choix que toi (" + total + " réponses).";
+  $("stat-fill").style.width = "0";
+  box.hidden = false;
+  requestAnimationFrame(() => requestAnimationFrame(() => { $("stat-fill").style.width = pct + "%"; }));
+}
+loadCounts();
+let idx = 0;
+let answers = [];
+let order = [];
+let slots = [];
+
+function briefNode(open) {
+  const d = document.createElement("details");
+  d.className = "brief";
+  if (open) d.open = true;
+  const s = document.createElement("summary");
+  s.textContent = "Le Salaire à Vie en quatre points";
+  const ul = document.createElement("ul");
+  ul.className = "points";
+  BRIEF.forEach(([h, t]) => {
+    const li = document.createElement("li");
+    const b = document.createElement("b");
+    b.textContent = h;
+    li.appendChild(b);
+    li.appendChild(document.createTextNode(t));
+    ul.appendChild(li);
+  });
+  d.appendChild(s);
+  d.appendChild(ul);
+  return d;
+}
+$("brief-intro").appendChild(briefNode(false));
+$("brief-results").appendChild(briefNode(true));
+
+function shuffle(a) {
+  const r = a.slice();
+  for (let i = r.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [r[i], r[j]] = [r[j], r[i]];
+  }
+  return r;
+}
+
+// Position du choix commun : chaque place (1re, 2e, 3e) revient autant de fois,
+// dans un ordre tiré au hasard, jamais plus de deux fois de suite au même endroit.
+function plan(n, k) {
+  let out = [];
+  while (out.length < n) {
+    let block = shuffle([...Array(k).keys()]);
+    const L = out.length;
+    if (L >= 2 && out[L - 1] === out[L - 2] && block[0] === out[L - 1]) block.push(block.shift());
+    out = out.concat(block);
+  }
+  return out.slice(0, n);
+}
+// Place le choix commun à la position prévue, les autres options au hasard autour.
+function arrange(options, pos) {
+  const common = options.find((o) => o.c);
+  const others = shuffle(options.filter((o) => !o.c));
+  others.splice(Math.min(pos, others.length), 0, common);
+  return others;
+}
+
+function show(id) {
+  ["intro", "quiz", "results"].forEach((s) => { $(s).hidden = s !== id; });
+  window.scrollTo({ top: 0 });
+}
+
+function renderSegs() {
+  $("segs").innerHTML = "";
+  S.forEach((_, i) => {
+    const d = document.createElement("div");
+    d.className = "seg" + (i < idx ? " done" : i === idx ? " now" : "");
+    $("segs").appendChild(d);
+  });
+}
+
+function renderSituation() {
+  const s = S[idx];
+  $("theme").textContent = s.theme;
+  $("count").textContent = "Situation " + (idx + 1) + " / " + S.length;
+  $("situation").textContent = s.text;
+  renderSegs();
+  $("reveal").hidden = true;
+  const box = $("options");
+  box.innerHTML = "";
+  order = arrange(s.options, slots[idx]);
+  order.forEach((o, k) => {
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.id = "opt-" + idx + "-" + k;
+    b.textContent = o.t;
+    b.addEventListener("click", () => pick(k));
+    box.appendChild(b);
+  });
+}
+
+function pick(k) {
+  const s = S[idx];
+  const choice = order[k];
+  answers[idx] = choice;
+  showStat(s, choice);
+  sendVote(s, choice);
+  [...$("options").children].forEach((b, i) => {
+    b.disabled = true;
+    b.classList.add(i === k ? "picked" : "faded");
+  });
+  $("reveal-body").textContent = choice.r;
+  $("model-body").textContent = s.model;
+  $("model-link").textContent = "Lire la fiche : " + s.fiche[1];
+  $("model-link").href = s.fiche[0];
+  $("brief-quiz").innerHTML = "";
+  $("brief-quiz").appendChild(briefNode(false));
+  $("next").textContent = idx === S.length - 1 ? "Voir mon bilan" : "Situation suivante";
+  $("reveal").hidden = false;
+  $("reveal").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+}
+
+function renderResults() {
+  const n = answers.filter((a) => a && a.c).length;
+  $("score").textContent = n;
+  $("dots").innerHTML = "";
+  answers.forEach((a) => {
+    const d = document.createElement("span");
+    d.className = "dot" + (a.c ? " c" : "");
+    $("dots").appendChild(d);
+  });
+  const L = S.length;
+  const P = PROFILES.find((p) => n >= Math.ceil(p.min * L));
+  const box = $("verdict");
+  box.innerHTML = "";
+  const h = document.createElement("h3");
+  h.textContent = P.title;
+  box.appendChild(h);
+  const com = S.filter((s, i) => answers[i] && answers[i].c).map((s) => s.theme);
+  const ind = S.filter((s, i) => answers[i] && !answers[i].c).map((s) => s.theme);
+  P.parts.forEach(([label, text], k) => {
+    const t = document.createElement("h4");
+    t.textContent = label;
+    box.appendChild(t);
+    const p = document.createElement("p");
+    p.textContent = text;
+    box.appendChild(p);
+    if (k === 0) {
+      const q = document.createElement("p");
+      q.className = "themes";
+      const bits = [];
+      if (com.length) bits.push("Choix commun : " + com.join(", ") + ".");
+      if (ind.length) bits.push("Choix individuel : " + ind.join(", ") + ".");
+      q.textContent = bits.join(" ");
+      box.appendChild(q);
+    }
+  });
+
+  const r = $("recap");
+  r.innerHTML = "";
+  S.forEach((s, i) => {
+    const a = answers[i];
+    const it = document.createElement("div");
+    it.className = "recap-item";
+    it.innerHTML =
+      '<div class="recap-head"><span class="recap-theme"></span><span class="pill ' + (a.c ? "c" : "i") + '">' + (a.c ? "commun" : "individuel") + "</span></div>" +
+      '<p class="recap-choice"></p><p class="recap-model"></p><a class="fiche-link" target="_blank" rel="noopener"></a>';
+    it.querySelector(".recap-theme").textContent = s.theme;
+    it.querySelector(".recap-choice").textContent = "Ton choix : " + a.t;
+    it.querySelector(".recap-model").textContent = s.model;
+    const l = it.querySelector("a");
+    l.textContent = "Lire la fiche : " + s.fiche[1];
+    l.href = s.fiche[0];
+    r.appendChild(it);
+  });
+}
+
+function begin() { idx = 0; answers = []; slots = plan(S.length, 3); show("quiz"); renderSituation(); }
+$("start").addEventListener("click", begin);
+$("next").addEventListener("click", () => {
+  if (idx < S.length - 1) { idx++; renderSituation(); window.scrollTo({ top: 0 }); }
+  else { renderResults(); show("results"); }
+});
+$("again").addEventListener("click", begin);
+$("nb-chip").textContent = S.length + " situations";
+$("nb-total").textContent = S.length;
+</script>
+</body>
+</html>
